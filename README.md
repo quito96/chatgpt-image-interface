@@ -1,6 +1,6 @@
 # ChatGPT Image Interface
 
-An interface to analyze photos with ChatGPT since there is currently a waitlist for ChatGPT Plus.
+An interface to analyze photos with ChatGPT since there is currently a waitlist for ChatGPT Plus. Seen in [*How do Multimodal AI models work? Simple explanation*](https://www.youtube.com/watch?v=WkoytlA3MoQ)
 
 - [First time setup](#first-time-setup)
 - [To use the app](#to-use-the-app)
