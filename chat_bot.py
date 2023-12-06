@@ -4,20 +4,23 @@ import os
 from openai import OpenAI
 import requests
 from dotenv import load_dotenv
+
 load_dotenv()
 
 client = OpenAI()
 
+
 # Function to base-64 encode images
 def encode_image(image_path):
-  with open(image_path, "rb") as image_file:
-    return base64.b64encode(image_file.read()).decode('utf-8')
+    with open(image_path, "rb") as image_file:
+        return base64.b64encode(image_file.read()).decode('utf-8')
+
 
 class ChatBot:
-  
-    def __init__(self, 
-                 api_key=os.getenv('OPENAI_API_KEY'), 
-                 model='gpt-4-vision-preview', 
+
+    def __init__(self,
+                 api_key=os.getenv('OPENAI_API_KEY'),
+                 model='gpt-4-vision-preview',
                  system='You are a helpful assistant.') -> None:
         self._api_key = api_key
         self._model = model
@@ -32,7 +35,7 @@ class ChatBot:
             "Content-Type": "application/json",
             "Authorization": f"Bearer {self._api_key}"
         }
-    
+
     @property
     def _payload(self):
         return {
@@ -43,18 +46,18 @@ class ChatBot:
 
     @property
     def messages(self):
-       return self._messages
-    
+        return self._messages
+
     def clear_messages(self):
-       self._messages = []
+        self._messages = []
 
     def _add_message(self, message):
-       self._messages.append(message)
+        self._messages.append(message)
 
     def _ask_text(self, text):
         self._add_message(
-           {"role": "user", "content": text},
-        )                
+            {"role": "user", "content": text},
+        )
 
         response = client.chat.completions.create(
             model=self._model,
@@ -62,11 +65,10 @@ class ChatBot:
             max_tokens=self._max_tokens
         )
 
-        
-        self._add_message({k: v for (k, v) in response.choices[0].message if k in ['role', 'content']})  
+        self._add_message({k: v for (k, v) in response.choices[0].message if k in ['role', 'content']})
 
         return response.choices[0].message.content
-    
+
     def _ask_image(self, text, image_path=None, image_bytes=None):
         if image_bytes is None:
             if image_path is not None:
@@ -105,7 +107,7 @@ class ChatBot:
             return message_content
         else:
             raise Exception("Error from the API: " + response.text)
-    
+
     def chat(self, text, image_path=None, image_bytes=None):
         if not image_path and not image_bytes:
             return self._ask_text(text)
